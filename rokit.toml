@@ -1,0 +1,8 @@
+# Toolchain for this repository, managed by Rokit (https://github.com/rojo-rbx/rokit).
+# Run `rokit install` to get the pinned versions.
+
+[tools]
+rojo = "rojo-rbx/rojo@7.7.0"
+selene = "Kampfkarren/selene@0.31.0"
+stylua = "JohnnyMorganz/StyLua@2.5.2"
+luau-lsp = "JohnnyMorganz/luau-lsp@1.70.1"

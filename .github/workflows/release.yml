@@ -1,0 +1,46 @@
+name: Release
+
+# Builds RoVision.rbxm and attaches it to the GitHub Release.
+# Runs when a release is published, or when a v* tag is pushed (the release is created if missing).
+on:
+  release:
+    types: [published]
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.event.release.tag_name || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.event.release.tag_name || github.ref_name }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: CompeyDev/setup-rokit@v0.2.1
+        with:
+          version: v1.2.0
+
+      - name: Stamp version
+        run: |
+          version="${TAG#v}"
+          sed -i -E "s/^local VERSION = \".*\"$/local VERSION = \"${version}\"/" src/init.luau
+          grep -q "^local VERSION = \"${version}\"$" src/init.luau
+
+      - name: Build RoVision.rbxm
+        run: rojo build default.project.json --output RoVision.rbxm
+
+      - name: Upload release asset
+        run: |
+          if ! gh release view "$TAG" > /dev/null 2>&1; then
+            gh release create "$TAG" --title "$TAG" --generate-notes
+          fi
+          gh release upload "$TAG" RoVision.rbxm --clobber

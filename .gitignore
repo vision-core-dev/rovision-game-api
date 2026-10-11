@@ -1,41 +1,23 @@
-# Compiled Lua sources
-luac.out
+# Build outputs (rojo build)
+*.rbxm
+*.rbxmx
+*.rbxl
+*.rbxlx
+*.rbxl.lock
+*.rbxlx.lock
 
-# luarocks build files
-*.src.rock
-*.zip
-*.tar.gz
+# Generated tooling files
+sourcemap.json
+globalTypes.d.luau
+roblox.yml
+roblox.toml
 
-# Object files
-*.o
-*.os
-*.ko
-*.obj
-*.elf
+# Package managers
+Packages/
+DevPackages/
+ServerPackages/
 
-# Precompiled Headers
-*.gch
-*.pch
-
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-*.def
-*.exp
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
-
+# OS / editors
+.DS_Store
+Thumbs.db
+*.swp
