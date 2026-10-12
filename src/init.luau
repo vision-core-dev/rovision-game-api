@@ -1,5 +1,5 @@
 --!strict
--- RoVision game module (server only). Docs: https://github.com/vision-core-dev/rovision-game-api
+-- RoVision game module (server only). Docs: https://rovision.gg/partners/api/docs
 
 local RunService = game:GetService("RunService")
 
