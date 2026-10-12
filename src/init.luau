@@ -41,6 +41,8 @@ local DEFAULT_BASE_URL = "https://api.rovision.gg"
 local SECRET_NAME = "rovision"
 local DEFAULT_RECHECK_INTERVAL = 300
 local MIN_RECHECK_INTERVAL = 60
+-- Studio gets no live updates from the site, so it re-checks this often instead (see Init).
+local STUDIO_RECHECK_INTERVAL = 15
 local CLOSE_TIMEOUT = 10 -- seconds of the 30 s BindToClose budget
 
 local KNOWN_OPTIONS = { ApiKey = true, BaseUrl = true, Debug = true, Bans = true }
@@ -190,6 +192,13 @@ function RoVision:Init(options: InitOptions?)
 		invalidOption("Bans.Live", "a boolean", live)
 	end
 
+	-- Roblox delivers Open Cloud messages only to live servers, so a Studio test never hears
+	-- about changes made on the site. Frequent re-checks stand in for them there.
+	local studioRecheck = live and RunService:IsStudio() and recheckInterval > STUDIO_RECHECK_INTERVAL
+	if studioRecheck then
+		recheckInterval = STUDIO_RECHECK_INTERVAL
+	end
+
 	Log.SetDebug(debugMode)
 	local authorization = resolveAuthorization(raw.ApiKey)
 
@@ -206,6 +215,14 @@ function RoVision:Init(options: InitOptions?)
 			team_changed = Team.Changed,
 			allowlists_changed = Allowlists.Changed,
 		})
+	end
+	if studioRecheck then
+		Log.Warn(
+			"Live updates don't work in Studio: Roblox delivers Open Cloud messages only to live servers, "
+				.. "so bans, roles and whitelist changes made on the site reach this test only on re-checks "
+				.. `(every {STUDIO_RECHECK_INTERVAL} s in Studio). To test instant kicks, publish the place and join a live server `
+				.. "(its BaseUrl must be reachable from Roblox, not localhost)."
+		)
 	end
 	game:BindToClose(function()
 		Live.Stop()
