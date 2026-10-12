@@ -26,7 +26,8 @@ local MAX_DURATION_DAYS = 3650
 -- While the API can't be reached, the gate lets a player stay and checks again after these pauses (seconds).
 local GATE_RETRY_DELAYS = { 5, 15, 45 }
 -- No links: Roblox doesn't allow sending players off-platform.
-local DEFAULT_GATE_MESSAGE = "Зараз у цю гру можуть зайти лише гравці зі списку доступу. Вас у ньому немає."
+local DEFAULT_GATE_MESSAGE =
+	"Зараз у цю гру можуть зайти лише гравці зі списку доступу. Вас у ньому немає."
 
 type Gate = {
 	Key: string,
